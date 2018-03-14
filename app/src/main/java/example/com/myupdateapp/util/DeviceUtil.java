@@ -6,16 +6,47 @@ import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Build;
+import android.os.Environment;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+
+import java.io.File;
+
+import example.com.myupdateapp.constant.Common;
 
 /**
  * 手机设备相关
  */
 
 public class DeviceUtil {
+
+    /**
+     * 是否有内存卡
+     */
+    public static boolean existSDCard() {
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
+    }
+
+    public static File getDownloadFile() {
+        String savePath;
+        if (DeviceUtil.existSDCard()) {
+            savePath = Environment.getExternalStorageDirectory().getPath();
+            Log.e("DeviceUtil", "有内存卡==savePath============" + savePath);// /storage/emulated/0
+        } else {
+            savePath = "/sdcard/update";
+            Log.e("DeviceUtil", "无内存卡==savePath============" + savePath);
+            File file = new File(savePath);
+            if (!file.exists()) {
+                file.mkdir();
+            }
+        }
+        File file = new File(savePath, Common.APK_NAME);
+        Log.e("DeviceUtil", "下载apk地址===" + file.getAbsolutePath());
+        return file;
+    }
 
     /**
      * 获取DisplayMetrics
@@ -70,7 +101,6 @@ public class DeviceUtil {
 
     /**
      * 获取状态栏高度
-     *
      */
     public static int getStatusHeight(Context context) {
         int statusHeight = -1;
