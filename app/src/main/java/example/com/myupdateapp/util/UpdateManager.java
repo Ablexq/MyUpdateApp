@@ -1,4 +1,4 @@
-package example.com.myupdateapp;
+package example.com.myupdateapp.util;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -23,6 +23,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import example.com.myupdateapp.util.DeviceUtil;
+import example.com.myupdateapp.util.NetUtil;
+import example.com.myupdateapp.util.VersionUtil;
 
 /**
  * 对话框GitHub地址：
@@ -63,13 +67,24 @@ public class UpdateManager {
             }
         }
     };
+    private String localVersionName;
 
     public UpdateManager(Context context) {
         this.mContext = context;
     }
 
     public void checkUpdateInfo() {
-        showNoticeDialog();
+        if (!NetUtil.isNetworkAvailable(mContext)) {
+            ToastUtil.showToast("没有网络，请先连接网络后重试");
+            return;
+        }
+
+        localVersionName = DeviceUtil.getSoftVersionName(mContext);
+        updateVersion = "2.3.3";
+        int compareVersion = VersionUtil.compareVersion(updateVersion, localVersionName);
+        if (compareVersion > 0) {
+            showNoticeDialog();
+        }
     }
 
     private void showNoticeDialog() {

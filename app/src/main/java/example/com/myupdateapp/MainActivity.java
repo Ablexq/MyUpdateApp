@@ -4,6 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import example.com.myupdateapp.util.UpdateManager;
+
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -15,4 +18,5 @@ public class MainActivity extends AppCompatActivity {
     public void onclick(View view) {
         new UpdateManager(this).checkUpdateInfo();
     }
+
 }
